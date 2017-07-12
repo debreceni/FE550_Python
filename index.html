@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <head>
-	<script src="/underscore/underscore-min.js"></script>
+	<script src="https://debreceni.github.io/underscore/underscore-min.js"></script>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<script src="/dimple/dist/dimple.v2.3.0.min.js"></script>
+	<script src="https://debreceni.github.io/dimple/dist/dimple.v2.3.0.min.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		
 </head>
-<body>
+<body ng-app="myApp" ng-controller="myCtrl">
+<div class="container-fluid">
+<div class="row">
+<div class="col-12">
 <H1>Attributes of a Soccer Player</H1>
 <H3>Dave Debreceni</H3>
 <P>Since I was taking my son to soccer camp this week to be reviewed by various international and domestic coaches, 
@@ -14,7 +21,7 @@ had the pleasure of working with some very talented players I obviously had my o
 But I was always curios about the types of attributes that made up top players.  I found a data set on Kaggle that had 
 the attributes of many players.  Now these are ratings for the game EA Sports Fifa, but they are consider accurate ratings.</P>
 
-<P>What I am going to review is basic skills.  These are: Crossing, Finishing, Passing, Volleys, Dribbling, and Ball Control.</P>
+<P>What I am going to review is basic skills.  These are: Crossing, Finishing, Short Passing, Long Passing, Volleys, Dribbling, and Ball Control.</P>
 <h3>Questions</H3>
 <UL><LI>Are there certain attributes that are more common in the top end players vs bottom? (approx 10,000 players analyzed)
 <LI>In the top 100 ranked players in the world, how do the skills break down?
@@ -22,4 +29,283 @@ the attributes of many players.  Now these are ratings for the game EA Sports Fi
 <LI>What should coaches focus on when developing players?
 <UL>
 
+<div>
+<br>
+<br>
+<Div>What are the attributes and ratings of players.  Take a look below at the overall ratings based upon players inside of deciles.</div>
+
+	<div class="row">
+		<div class="col-sm-12"><h3>Toggle through the Players Deciles to see what each attribute rating is. (1 = best, 10 = worst)</h3></div>
+	</div>
+	<div class="row">
+		
+		<div class="col-lg-1" >
+			<div class="btn-group btn-block deciles" data-toggle="buttons">
+				<label class="btn btn-primary  active">
+					<input type="radio" name="options" value="9" autocomplete="off" checked> 1st Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="8" autocomplete="off" checked> 2nd Decile 
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="7" autocomplete="off" checked> 3rd Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="6" autocomplete="off" checked> 4th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="5" autocomplete="off" checked> 5th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="4" autocomplete="off" checked> 6th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="3" autocomplete="off" checked> 7th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="2" autocomplete="off" checked> 8th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="1" autocomplete="off" checked> 9th Decile  
+				</label>
+				<label class="btn btn-primary ">
+					<input type="radio" name="options" value="0" autocomplete="off" checked> 10th Decile  
+				</label>
+				
+			</div>
+		</div>
+		<div class="col-lg-5">
+			
+			<canvas id="attrMap" width="500" height="400"></canvas>
+		</div>
+		<div class="col-lg-6">
+			<div id="decilechrt"></div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
 </BODY>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    
+
+	function drawplyrattr(x,y,fillcolor) {
+	//debugger;
+		var canvas = document.getElementById("attrMap");
+		var ctx = canvas.getContext("2d");
+		
+		ctx.beginPath();
+		ctx.font = '18px serif';
+		ctx.ellipse(x, y, 35, 20, 0, 0, 2 * Math.PI);
+		ctx.fillStyle = tmpcolor[fillcolor];
+		ctx.fill();
+		ctx.strokeText(fillcolor + '%', x-15,y+5);		
+		ctx.stroke();
+
+	}
+	
+	function hex (c) {
+	  var s = "0123456789abcdef";
+	  var i = parseInt (c);
+	  if (i == 0 || isNaN (c))
+		return "00";
+	  i = Math.round (Math.min (Math.max (0, i), 255));
+	  return s.charAt ((i - i % 16) / 16) + s.charAt (i % 16);
+	}
+
+	/* Convert an RGB triplet to a hex string */
+	function convertToHex (rgb) {
+	  return '#' + hex(rgb[0]) + hex(rgb[1]) + hex(rgb[2]);
+	}
+
+	/* Remove '#' in color hex string */
+	function trim (s) { return (s.charAt(0) == '#') ? s.substring(1, 7) : s }
+
+	/* Convert a hex string to an RGB triplet */
+	function convertToRGB (hex) {
+	  var color = [];
+	  color[0] = parseInt ((trim(hex)).substring (0, 2), 16);
+	  color[1] = parseInt ((trim(hex)).substring (2, 4), 16);
+	  color[2] = parseInt ((trim(hex)).substring (4, 6), 16);
+	  return color;
+	}
+
+	function generateColor(colors) {
+		
+		//always start with 100
+		colorlen = 100;
+		colorlen = colors.length==2?100:Math.floor(colorlen/(colors.length-1));
+		
+		colorcnt = 0;	
+		colorary = [];
+	//	debugger;
+		//colors should be an array in order
+		for(j=0; j < colors.length-1; j++) {
+			tmpary = generategradeColor(colors[j],colors[j+1], colorlen);
+			//debugger;
+			colorary = _.union(colorary,tmpary);
+			colorcnt += colorlen;
+			if(j==colors.length-3)
+				colorlen = 100- colorcnt;
+			}
+			//debugger;
+		return colorary;
+	}
+	
+	function generategradeColor(colorStart,colorEnd, gradlen){
+
+		// The beginning of your gradient
+		var start = convertToRGB (colorStart);    
+
+		// The end of your gradient
+		var end   = convertToRGB (colorEnd);    
+
+		// The number of colors to compute
+		var len = gradlen;
+
+		//Alpha blending amount
+		var alpha = 0.0;
+
+		var saida = [];
+		
+		for (i = 0; i < len; i++) {
+			var c = [];
+			alpha += (1.0/len);
+			
+			c[0] = end[0] * alpha + (1 - alpha) * start[0];
+			c[1] = end[1] * alpha + (1 - alpha) * start[1];
+			c[2] = end[2] * alpha + (1 - alpha) * start[2];
+
+			saida.push(convertToHex (c));
+			
+		}		
+		
+		return saida;
+		
+	}
+
+	var tmpcolor = generateColor(["#FF0000","#FFFF00","#008000"]);
+//debugger;
+//	for (cor in tmp) {
+//	  $('#result_show').append("<div style='padding:8px;color:#FFF;background-color:"+tmp[cor]+"'>COLOR "+cor+"° - "+tmp[cor]+"</div>")
+	 
+//	}
+	
+	$scope.renderattributes = function (idx) {
+	
+		$.getJSON( "https://debreceni.github.io/FE550_Python/Data/plyrattr.json", function( data ) {
+			var items = [];
+			tmpdata = data[idx];
+			//debugger;
+			dcllbl = {1:"10th",2:"9th",3:"8th",4:"7th",5:"6th",6:"5th",7:"4th",8:"3rd",9:"2nd",10:"1st"};
+			
+			var xcoor = 0;
+			var ycoor = 30;
+			
+			//Add player in the middlectx.beginPath();
+			var canvas = document.getElementById("attrMap");
+			var ctx = canvas.getContext("2d");
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			drawplyrattr(xcoor+130,ycoor+75,Math.round(tmpdata['volleys']));//volleys
+			drawplyrattr(xcoor+110,ycoor+160,Math.round(tmpdata['crossing']));//Crossing
+			drawplyrattr(xcoor+170,ycoor+240,Math.round(tmpdata['long_passing']));//Long Passing
+			drawplyrattr(xcoor+320,ycoor+240,Math.round(tmpdata['short_passing']));//Short Passing
+			drawplyrattr(xcoor+380,ycoor+160,Math.round(tmpdata['finishing']));//Finishing
+			drawplyrattr(xcoor+360,ycoor+75,Math.round(tmpdata['dribbling']));//Dribbling
+			drawplyrattr(xcoor+245,ycoor+40,Math.round(tmpdata['ball_control']));//Ball Control
+			drawplyrattr(xcoor+245,ycoor+140,Math.round(tmpdata['overall_rating']));//Ball Control
+			
+			//Add player in the middlectx.beginPath();
+			var canvas = document.getElementById("attrMap");
+			var ctx = canvas.getContext("2d");
+			
+			ctx.beginPath();
+			ctx.font = '18px serif';
+			//ctx.ellipse(xcoor+245, ycoor+140, 35, 20, 0, 0, 2 * Math.PI);
+			//ctx.fillStyle = '#8ED6FF';
+			//ctx.fill();
+			//ctx.strokeText(dcllbl[idx], xcoor+235,ycoor+145);		
+			//ctx.stroke();
+			// Add Labels
+			ctx.fillStyle = '#000000';
+			ctx.fillText('Crossing',xcoor+5,ycoor+165);
+			ctx.fillText('Finishing',xcoor+425,ycoor+165);
+			ctx.fillText('Short Passing',xcoor+275,ycoor+275);
+			ctx.fillText('Long Passing',xcoor+120,ycoor+275);
+			ctx.fillText('Volleys',xcoor+35,ycoor+80);
+			ctx.fillText('Dribbling',xcoor+400,ycoor+80);
+			ctx.fillText('Ball Control',xcoor+205,ycoor+15);
+			
+			var chrtLbl = { overall_rating : 'Rating',crossing:'Crossing', finishing:'Finishing',short_passing:'Short Passing',volleys:'Volleys',
+				dribbling:'Dribbling', long_passing:'Long Passing', ball_control:'Ball Control'};
+			
+			
+			var svg = dimple.newSvg("#decilechrt", 500, 400);
+			var chartData = {};
+			
+			mykeys = _.keys(data[0]);
+			
+			chartData = _.chain(data)
+					//.reduce(function (nobj,oobj){return 
+					//	nobj += _.map(oobj,function(val,key){return {Skill:key, Data:val}})},{})
+					.map(function(val,key){
+						var dec = dcllbl[val['decile']];
+						return _.chain(val)
+								.omit('decile')
+								.map(function(val,key){return {Skill:key, Data:val,Decile:"Decile " + dec}})
+								.value();
+								})
+					.flatten()
+					.value();
+			
+			var minrank = _.reduce(chartData, function(prev, curr) {
+					return prev < curr.Data ? prev : curr.Data;
+				},100);
+			 var maxrank = _.reduce(chartData, function(prev, curr) {
+					return prev > curr.Data ? prev : curr.Data;
+				},0);
+			
+			var myChart = new dimple.chart(svg,chartData);
+			 myChart.setBounds(20, 30, 400, 300);
+			 var x =  myChart.addCategoryAxis("x", "Skill");
+		
+			 var y = myChart.addMeasureAxis("y", "Data");
+			y.overrideMin = minrank;
+			y.overrideMax = maxrank;
+			y.showGridlines = false;
+			y.ticks = 15;
+				
+			
+			var s = myChart.addSeries("Decile", dimple.plot.line);
+			//s.lineWeight = 1;
+			//s.barGap = 0.05;	
+			s.interpolation = "cardinal";
+			x.addOrderRule(['overall_rating','ball_control','dribbling','finishing','short_passing','long_passing','crossing','volleys']);
+			myChart.addLegend(430, 20, 100, 300, "left");
+			  myChart.draw();
+		x.shapes.selectAll("text")
+				.text(function (d) { 
+					  	   return chrtLbl[d];
+						   }
+					  ).attr("transform", "rotate(30)");	
+		//x.shapes.selectAll("text");
+		
+		});
+		
+		
+		
+	}
+	
+	
+	$scope.renderattributes(9);
+	
+	$('.deciles input[type=radio]').on('change', function() {
+		$scope.renderattributes(this.value);
+		
+	});
+});
+
+</script>
