@@ -227,5 +227,121 @@ app.controller('myCtrl', function($scope) {
 		$scope.renderattributes(this.value);
 		
 	});
+	
+	$.getJSON( "https://debreceni.github.io/FE550_Python/Data/top100players.json").then( function( plydata ) {
+		
+		var svg = dimple.newSvg("#topplayerschart", 600, 500);
+		var chartData = {};
+		var chrtLbl = { overall_rating : 'Rating',crossing:'Crossing', finishing:'Finishing',short_passing:'Short Passing',volleys:'Volleys',
+				dribbling:'Dribbling', long_passing:'Long Passing', ball_control:'Ball Control'};
+		var mykeys = ['ball_control','dribbling','finishing','short_passing','long_passing','crossing','volleys'];
+			debugger;
+			chartData = _.chain(plydata)
+					.map(function(val,key){
+						var overallr = val['overallrank'];
+						return _.chain(val)
+								.pick(mykeys)
+								.map(function(val,key){return {Skill:chrtLbl[key], Data:val,Rank:overallr}})
+								.value();
+								})
+					.flatten()
+					.value();
+		
+		var maxData = _.chain(chartData)
+					.groupBy(function(g) { return g.Skill;})
+					.map(function(val,key) {
+						var maxval = _.reduce(val,function(prev, curr) {
+							return prev > curr.Data ? prev : curr.Data;
+							},0);
+							return {Skill:key, Data:maxval, Rank:0};
+					})
+					.value();
+		
+		var minrank = _.reduce(chartData, function(prev, curr) {
+					return prev < curr.Data ? prev : curr.Data;
+				},100);
+		 var maxrank = _.reduce(chartData, function(prev, curr) {
+				return prev > curr.Data ? prev : curr.Data;
+			},0);
+		 var myChart = new dimple.chart(svg, chartData);
+        myChart.setBounds(30, 30, 550, 400)
+        var x =  myChart.addCategoryAxis("x", "Skill");
+		
+		var y = myChart.addMeasureAxis("y", "Data");
+			y.title = "Rating"
+			y.overrideMin = minrank;
+			y.overrideMax = maxrank;
+			y.showGridlines = false;
+			y.hidden = true;
+		//	y.ticks = 15;
+		var s = myChart.addSeries("Skill", dimple.plot.bar);
+		s.aggregate = dimple.aggregateMethod.avg;
+		var t = myChart.addSeries("Skill", dimple.plot.bar);
+		t.aggregate = dimple.aggregateMethod.max;
+        
+		 s.afterDraw = function (shape, data) {
+        // Get the shape as a d3 selection
+        var s = d3.select(shape),
+          rect = {
+            x: parseFloat(s.attr("x")),
+            y: parseFloat(s.attr("y")),
+            width: parseFloat(s.attr("width")),
+            height: parseFloat(s.attr("height"))
+          };
+        // Only label bars where the text can fit
+        if (rect.height >= 8) {
+          // Add a text label for the value
+          svg.append("text")
+            // Position in the centre of the shape (vertical position is
+            // manually set due to cross-browser problems with baseline)
+            .attr("x", rect.x + rect.width / 2)
+            .attr("y", rect.y + rect.height / 2 + 3.5)
+            // Centre align
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style("font-family", "sans-serif")
+            // Make it a little transparent to tone down the black
+            .style("opacity", 0.6)
+            // Prevent text cursor on hover and allow tooltips
+            .style("pointer-events", "none")
+            // Format the number
+            .text(d3.format(".1f")(data.yValue) + "%");
+        }
+		
+      };
+		 
+		t.afterDraw = function (shape, data) {
+        // Get the shape as a d3 selection
+        var s = d3.select(shape),
+          rect = {
+            x: parseFloat(s.attr("x")),
+            y: parseFloat(s.attr("y")),
+            width: parseFloat(s.attr("width")),
+            height: parseFloat(s.attr("height"))
+          };
+        // Only label bars where the text can fit
+        if (rect.height >= 8) {
+          // Add a text label for the value
+          svg.append("text")
+            // Position in the centre of the shape (vertical position is
+            // manually set due to cross-browser problems with baseline)
+            .attr("x", rect.x + rect.width / 2)
+            .attr("y", rect.y + 30)
+            // Centre align
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style("font-family", "sans-serif")
+            // Make it a little transparent to tone down the black
+            .style("opacity", 0.6)
+            // Prevent text cursor on hover and allow tooltips
+            .style("pointer-events", "none")
+            // Format the number
+            .text(d3.format(".1f")(data.yValue) + "%");
+        }
+		
+      };
+        myChart.draw();
+	});
+		
 });
 
