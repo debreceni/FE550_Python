@@ -25,33 +25,33 @@
 	<div class="container-fluid">
 		<div class="row ">
 			<div class="col-sm-10">
-			<div class="row">
-				<div class="col-sm-12">
-				<H1>Attributes of a Soccer Player</H1>
-				<H3>Dave Debreceni</H3>
-				<P>Since I was taking my son to soccer camp this week to be reviewed by various international and domestic coaches, 
-				I thought it only fitting to do an analysis of what makes a good player.  Being a coach/player for many years and having 
-				had the pleasure of working with some very talented players I obviously had my own opinions of what matters in players.  
-				But I was always curios about the types of attributes that made up top players.  I found a data set on Kaggle that had 
-				the attributes of many players.  Now these are ratings for the game EA Sports Fifa, but they are consider accurate ratings.</P>
+				<div class="row">
+					<div class="col-sm-12">
+						<H1>Attributes of a Soccer Player</H1>
+						<H3>Dave Debreceni</H3>
+						<P>Since I was taking my son to soccer camp this week to be reviewed by various international and domestic coaches, 
+						I thought it only fitting to do an analysis of what makes a good player.  Being a coach/player for many years and having 
+						had the pleasure of working with some very talented players I obviously had my own opinions of what matters in players.  
+						But I was always curios about the types of attributes that made up top players.  I found a data set on Kaggle that had 
+						the attributes of many players.  Now these are ratings for the game EA Sports Fifa, but they are consider accurate ratings.</P>
 
-				<P>What I am going to review is basic skills.  These are: Crossing, Finishing, Short Passing, Long Passing, Volleys, Dribbling, and Ball Control.
-				I have used Python to get and clean the data, then build json files to display here.<br>
-				The data source is from kaggle: https://www.kaggle.com/hugomathien/soccer<br>
-				I have loaded the Python file and all data files except the database to github - https://github.com/debreceni/FE550_Python</P>
-				<h3>Questions</H3>
-				<UL><LI>Are there certain attributes that are more common in the top end players vs bottom? (approx 10,000 players analyzed)
-				<LI>In the top 100 ranked players in the world, how do the skills break down?
-				<LI>Are there certain skills that more desired by position?
-				<LI>What should coaches focus on when developing players?
-				<UL>
-			
-				
-				<br>
-				<br>
-				<Div>What are the attributes and ratings of players.  Take a look below at the overall ratings based upon players inside of deciles.</div>
-			</div>
-			</div>
+						<P>What I am going to review is basic skills.  These are: Crossing, Finishing, Short Passing, Long Passing, Volleys, Dribbling, and Ball Control.
+						I have used Python to get and clean the data, then build json files to display here.<br>
+						The data source is from kaggle: https://www.kaggle.com/hugomathien/soccer<br>
+						I have loaded the Python file and all data files except the database to github - https://github.com/debreceni/FE550_Python</P>
+						<h3>Questions</H3>
+						<UL><LI>Are there certain attributes that are more common in the top end players vs bottom? (approx 10,000 players analyzed)
+						<LI>In the top 100 ranked players in the world, how do the skills break down?
+						<LI>Are there certain skills that more desired by position?
+						<LI>What should coaches focus on when developing players?
+						<UL>
+					
+						
+						<br>
+						<br>
+						<Div>What are the attributes and ratings of players.  Take a look below at the overall ratings based upon players inside of deciles.</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-sm-6"><h4>Toggle through the Players Deciles to see what each attribute rating is. (1 = best, 10 = worst)</h4></div>
 					<div class="col-sm-6">Takes the normalized skill value across all the players in the decile.  Formula used to normalize is (x-min(x))/(max(x)-min(x))</div>
@@ -120,8 +120,8 @@
 					
 						<div id="topplayerschart"></div>
 					</div>
-					<div class="col-sm-5" >
-						<div class="mymid">
+					<div class="col-sm-5" style="margin-left:75px; margin-top:50px;">
+						
 						<div class="h3">Chart Analysis</div>
 						<p>The chart on the left looks at both the average score in each of the player attributes being analyzed, the max score for each attribute and the skill importance.
 						From the data it appears that the top 3 things that help a players rating are: Ball Control, Short Passing and Dribbling.  These attributes are all
@@ -132,7 +132,7 @@
 						On average the other skills listed all seem to be in-line with each other.  Not much variance there.  and the importance of all the skills is rather high for this group.
 						 </p>
 						</div>
-					</div>
+					
 					
 				</div>
 				<div class="row" >
@@ -164,11 +164,11 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-4 ">
+					<div class="col-sm-4">
 						<h4 class="text-center">Forwards</H4>
 						<div id="postopplayersFWD"></div>
 						<p class="text-center" style="margin-left:50px">The final analysis for the top 100 players I found insightful. No suprise again that Forwards need to finish.  As the average rating for these players shows, they are required to have 
-						multiple skills at a high level.  What was unexpected was the value placed relative to other skills.  Short passing for the forwards was something I expected to be in higher demand.<p>
+						multiple skills at a high level.  What was unexpected was the value placed relative to other skills.  Short passing for the forwards was something I expected to be in higher demand.</p>
 					</div>
 					<div class="col-sm-4 ">
 						<h4 class="text-center">Midfielders</H4>
@@ -189,7 +189,7 @@
 						<p>The information above helped give me some insight into the skills of the better players but also to the value of other skills in relation to the package as a whole.  These additional skills will make
 						players more desirable at all levels of play.  As a coach I should clearly focus on Short passing, Ball Control and Dribbling.  These items on all levels seem to have higher value than others.  
 						If you want to develop a player into something more, these must haves will make or break them.  If you truely want to break into the top 100 though, you need to mast some of these more desirable skills such
-						as volleys.<p>
+						as volleys.</p>
 					</div>
 				</div>
 			</div>
